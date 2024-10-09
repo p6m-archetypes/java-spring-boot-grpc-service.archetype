@@ -1,0 +1,42 @@
+# gRPC
+grpc:
+  port: {{ service-port }}
+  enableReflection: true
+  start-up-phase: 0
+  shutdownGrace: 30 # Seconds
+
+# Management (Hosted on Server Port)
+# https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints
+server:
+  port: {{ management-port }}
+management:
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: {{ artifact-id }}
+
+persistence:
+  database:{% if persistence == 'CockroachDB' %}
+    username: root
+    password:
+    url: jdbc:postgresql://localhost:{{ database-port }}/defaultdb{% endif %}{% if feature-sqs %}
+
+sqs:
+  queues:
+    inbound: {{ project-prefix }}-requests{% endif %}{% if feature-sns %}
+
+sns:
+  topics:
+    inbound: {{ project-prefix }}-inbound-topic
+    outbound: {{ project-prefix }}-outbound-topic{% endif %}

@@ -1,0 +1,102 @@
+
+{% macro api_interface_methods(entity_key, entity, model) -%}
+    Create{{ entity_key | pascal_case }}Response create{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto {{ entity_key | camel_case }});
+    Get{{ entity_key | pascal_case | pluralize }}Response get{{ entity_key | pascal_case | pluralize }}(Get{{ entity_key | pascal_case | pluralize }}Request request);
+    Get{{ entity_key | pascal_case }}Response get{{ entity_key | pascal_case }}(Get{{ entity_key | pascal_case }}Request request);
+    Update{{ entity_key | pascal_case }}Response update{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto {{ entity_key | camel_case }});
+{%- endmacro %}
+
+
+{% macro core_persistence_imports(entity_key, entity, model) -%}
+import {{ root_package }}.persistence.entities.{{ entity_key | pascal_case }}Entity;
+import {{ root_package }}.persistence.repositories.{{ entity_key | pascal_case }}Repository;
+{%- endmacro %}
+
+
+{% macro core_persistence_constructor_arg(entity_key, entity, model) -%}
+final {{ entity_key | pascal_case }}Repository {{ entity_key | camel_case }}Repository
+{%- endmacro %}
+
+
+{% macro core_persistence_fields() -%}
+{%- if persistence != 'None' %}
+    {%- for entity_key in model.entities -%}
+    private final {{ entity_key | pascal_case }}Repository {{ entity_key | camel_case }}Repository;
+    {% endfor %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro core_persistence_constructor_args() -%}
+{%- if persistence != 'None' %}
+    {%- for entity_key in model.entities %}
+        final {{ entity_key | pascal_case }}Repository {{ entity_key | camel_case }}Repository{% if not loop.last%}, {% endif %}
+    {%- endfor %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro core_persistence_constructor_assignments() -%}
+{%- if persistence != 'None' %}
+    {%- for entity_key in model.entities %}
+        this.{{ entity_key | camel_case }}Repository =  {{ entity_key | camel_case }}Repository;{% endfor %}
+{%- endif %}
+{%- endmacro %}
+
+
+{% macro core_implementation_methods(entity_key, entity, model) -%}
+    @Override
+    public Create{{ entity_key | pascal_case }}Response create{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto {{ entity_key | camel_case }}) {{'{'}}{% if persistence != 'None' %}
+        {{ entity_key | pascal_case }}Entity savedEntity = {{ entity_key | camel_case }}Repository.save(new {{ entity_key | pascal_case }}Entity({{ entity_key | camel_case }}.getName()));{% endif %}{% if feature-sqs %}
+        queueMessagingTemplate.convertAndSend(sqsProperties.getQueues().get("inbound"), {{ entity_key | camel_case }}.getName());{% endif %}{% if feature-sns %}
+        notificationMessagingTemplate.convertAndSend(snsProperties.getTopics().get("inbound"), {{ entity_key | camel_case }}.getName());{% endif %}{% if persistence != 'None' %}
+        return Create{{ entity_key | pascal_case }}Response.newBuilder()
+            .set{{ entity_key | pascal_case }}(convert(savedEntity))
+            .build();{% else %}
+        return Create{{ entity_key | pascal_case }}Response.getDefaultInstance();{% endif %}
+    }
+
+    @Override
+    public Get{{ entity_key | pascal_case | pluralize }}Response get{{ entity_key | pascal_case | pluralize }}(Get{{ entity_key | pascal_case | pluralize }}Request request) {{'{'}}{% if persistence != 'None' %}
+       int pageSize = Math.min(Math.max(request.getPageSize(), 10), 100);
+       Pageable pageable = PageRequest.of(request.getStartPage(), pageSize);
+       Page<{{ entity_key | pascal_case }}Entity> page = {{ entity_key | camel_case }}Repository.findAll(pageable);
+       List<{{ entity_key | pascal_case }}Dto> {{ entity_key | camel_case | pluralize }} = page.stream().map(Converters::convert).collect(Collectors.toList());
+       return Get{{ entity_key | pascal_case | pluralize }}Response.newBuilder()
+           .addAll{{ entity_key | pascal_case }}({{ entity_key | camel_case | pluralize }})
+           .setHasNext(page.hasNext())
+           .setHasPrevious(page.hasPrevious())
+           .setNextPage(page.getPageable().next().getPageNumber())
+           .setTotalElements(page.getTotalElements())
+           .setTotalPages(page.getTotalPages())
+           .build();{% else %}
+       return Get{{ entity_key | pascal_case | pluralize }}Response.getDefaultInstance();{% endif %}
+    }
+
+    @Override
+    public Get{{ entity_key | pascal_case }}Response get{{ entity_key | pascal_case }}(Get{{ entity_key | pascal_case }}Request request) {{'{'}}{% if persistence != 'None' %}
+        Optional<{{ entity_key | pascal_case }}Entity> response = {{ entity_key | camel_case }}Repository.findById(UUID.fromString(request.getId()));
+        if (response.isPresent()) {
+            {{ entity_key | pascal_case }}Entity entity = response.get();
+            return Get{{ entity_key | pascal_case }}Response.newBuilder().set{{ entity_key | pascal_case }}(convert(entity)).build();
+        }
+        return null; // TODO: Handle error!{% else %}
+        return Get{{ entity_key | pascal_case }}Response.getDefaultInstance();{% endif %}
+    }
+
+    @Override
+    public Update{{ entity_key | pascal_case }}Response update{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto {{ entity_key | camel_case }}) {{'{'}}{% if persistence != 'None' %}
+        if ({{ entity_key | camel_case }}.hasId()) {
+            UUID id = UUID.fromString({{ entity_key | camel_case }}.getId().getValue());
+            Optional<{{ entity_key | pascal_case }}Entity> entity = {{ entity_key | camel_case }}Repository.findById(id);
+            if (entity.isPresent()) {
+                {{ entity_key | pascal_case }}Entity {{ entity_key | camel_case }}Entity = entity.get();
+                {{ entity_key | camel_case }}Entity.setName({{ entity_key | camel_case }}.getName());
+                {{ entity_key | camel_case }}Repository.save({{ entity_key | camel_case }}Entity);
+                return Update{{ entity_key | pascal_case }}Response.newBuilder().set{{ entity_key | pascal_case }}(convert({{ entity_key | camel_case }}Entity)).build();
+            }
+        }{% endif %}
+        return Update{{ entity_key | pascal_case }}Response.getDefaultInstance();
+    }
+
+{%- endmacro %}

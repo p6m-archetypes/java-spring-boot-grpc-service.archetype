@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <include resource="{{ group-directory}}/platform/logging/logback/{{ org-venture-name }}-platform-logging.xml"/>
+
+    <springProfile name="!prod">
+        <logger name="{{ group-id }}.foo.service" level="DEBUG"/>
+    </springProfile>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

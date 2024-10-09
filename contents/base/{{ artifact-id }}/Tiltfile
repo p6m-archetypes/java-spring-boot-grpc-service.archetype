@@ -1,0 +1,30 @@
+custom_build(
+  '{{ artifact-id }}-server',
+  'mvn install -Pdocker-build -DskipTests',
+  deps=['src'])
+
+k8s_yaml(kustomize('.platform/kubernetes/tilt'), allow_duplicates=True)
+
+k8s_resource(
+    workload='{{ artifact-id }}',
+    port_forwards=[
+        port_forward({{ service-port }}, 8080),
+        port_forward({{ management-port }}, 8081),
+        port_forward({{ debug-port }}, 5005)
+    ],
+    links=[
+        link('http://localhost:{{ management-port }}/health', 'Health'),
+        link('http://localhost:{{ management-port }}/prometheus', 'Prometheus'),
+    ],
+){% if persistence == 'CockroachDB' %}
+
+k8s_resource(
+    workload='{{ artifact-id }}-cockroachdb',
+    port_forwards=[
+        port_forward({{ database-port }}, 26257),
+        port_forward({{ database-port + 1 }}, 8080),
+    ],
+    links=[
+        link('http://localhost:{{ database-port + 1 }}', 'CockroachDB'),
+    ],
+){% endif %}

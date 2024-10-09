@@ -1,0 +1,8 @@
+
+clients:
+  {{ artifact-id }}:
+    host: localhost
+    port: 9010
+
+execution:
+  environment: dev

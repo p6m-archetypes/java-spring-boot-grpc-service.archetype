@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>{{ group-id }}</groupId>
+        <artifactId>{{ artifact-id }}</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>{{ artifact-id }}-bom</artifactId>
+    <name>{{ project-title }} :: BOM</name>
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>{{ group-id }}</groupId>
+                <artifactId>{{ artifact-id }}-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>{{ group-id }}</groupId>
+                <artifactId>{{ artifact-id }}-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>{{ group-id }}</groupId>
+                <artifactId>{{ artifact-id }}-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>{{ group-id }}</groupId>
+                <artifactId>{{ artifact-id }}-grpc</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>{% if persistence != 'None' %}
+            <dependency>
+                <groupId>{{ group-id }}</groupId>
+                <artifactId>{{ artifact-id }}-persistence</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>{% endif %}
+            <dependency>
+                <groupId>{{ group-id }}</groupId>
+                <artifactId>{{ artifact-id }}-server</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
