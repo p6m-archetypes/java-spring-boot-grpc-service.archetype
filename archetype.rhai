@@ -28,7 +28,7 @@ context += prompt("Persistence:", "persistence", #{
 });
 
 
-context += prompt(render("{{ org-venture-name }}-parent Version:", context), "platform-version", #{
+context += prompt(render("{{ org-solution-name }}-parent Version:", context), "platform-version", #{
     defaults_with: "1.0.0-SNAPSHOT",
 });
 

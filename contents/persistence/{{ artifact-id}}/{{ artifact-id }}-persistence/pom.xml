@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-venture-name }}-platform-persistence-jpa</artifactId>
+            <artifactId>{{ org-solution-name }}-platform-persistence-jpa</artifactId>
         </dependency>
     </dependencies>
 

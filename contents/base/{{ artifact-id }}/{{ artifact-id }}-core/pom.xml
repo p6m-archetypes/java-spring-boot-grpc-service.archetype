@@ -25,11 +25,11 @@
         </dependency>{% endif %}{% if feature-sqs or feature-sns %}
         <dependency>
             <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-venture-name }}-platform-aws-messaging</artifactId>
+            <artifactId>{{ org-solution-name }}-platform-aws-messaging</artifactId>
         </dependency>{% endif %}
         <dependency>
             <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-venture-name }}-platform-errorhandling</artifactId>
+            <artifactId>{{ org-solution-name }}-platform-errorhandling</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
