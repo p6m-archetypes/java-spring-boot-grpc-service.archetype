@@ -2,6 +2,8 @@ on:
   - push
   - workflow_dispatch
 
+permissions: write-all
+
 name: 1. DEV Environment Build
 jobs:
   build_and_deploy:

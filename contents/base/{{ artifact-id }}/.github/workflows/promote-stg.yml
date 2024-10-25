@@ -5,6 +5,8 @@ on:
         description: 'Tag to promote'
         required: true
 
+permissions: write-all
+
 name: 3. Promote Tag to Stage
 run-name: Deploy ${{'{'}}{ inputs.tag }} to Stage by @${{'{'}}{ github.triggering_actor }}
 jobs:
