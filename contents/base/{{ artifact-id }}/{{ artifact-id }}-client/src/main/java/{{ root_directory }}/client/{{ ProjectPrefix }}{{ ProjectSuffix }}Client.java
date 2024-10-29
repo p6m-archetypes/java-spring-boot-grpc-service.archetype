@@ -38,5 +38,10 @@ public class {{ ProjectPrefix }}{{ ProjectSuffix }}Client implements {{ ProjectP
     public Update{{ EntityName }}Response update{{ EntityName }}({{ EntityName }}Dto {{ entityName }}) {
         return stub.update{{ EntityName }}({{ entityName }});
     }
+
+    @Override
+    public Delete{{ EntityName }}Response delete{{ EntityName }}(Delete{{ EntityName }}Request request) {
+        return stub.delete{{ EntityName }}(request);
+    }
 {% endfor %}
 }

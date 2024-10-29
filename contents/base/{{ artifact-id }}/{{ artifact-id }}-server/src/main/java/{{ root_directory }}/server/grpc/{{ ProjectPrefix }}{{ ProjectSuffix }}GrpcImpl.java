@@ -45,5 +45,12 @@ public class {{ ProjectPrefix }}{{ ProjectSuffix }}GrpcImpl extends {{ ProjectPr
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+    
+    @Override
+    public void delete{{ EntityName }}(Delete{{ EntityName }}Request request, StreamObserver<Delete{{ EntityName }}Response> responseObserver) {
+        Delete{{ EntityName }}Response response = service.delete{{ EntityName }}(request);
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 {% endfor %}
 }

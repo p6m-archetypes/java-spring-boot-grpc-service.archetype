@@ -4,6 +4,7 @@
     Get{{ entity_key | pascal_case | pluralize }}Response get{{ entity_key | pascal_case | pluralize }}(Get{{ entity_key | pascal_case | pluralize }}Request request);
     Get{{ entity_key | pascal_case }}Response get{{ entity_key | pascal_case }}(Get{{ entity_key | pascal_case }}Request request);
     Update{{ entity_key | pascal_case }}Response update{{ entity_key | pascal_case }}({{ entity_key | pascal_case }}Dto {{ entity_key | camel_case }});
+    Delete{{ entity_key | pascal_case }}Response delete{{ entity_key | pascal_case }}(Delete{{ entity_key | pascal_case }}Request request);
 {%- endmacro %}
 
 
@@ -97,6 +98,14 @@ final {{ entity_key | pascal_case }}Repository {{ entity_key | camel_case }}Repo
             }
         }{% endif %}
         return Update{{ entity_key | pascal_case }}Response.getDefaultInstance();
+    }
+
+    @Override
+    public Delete{{ entity_key | pascal_case }}Response delete{{ entity_key | pascal_case }}(Delete{{ entity_key | pascal_case }}Request request) {{'{'}}{% if persistence != 'None' %}
+        UUID id = UUID.fromString(request.getId());
+        {{ entity_key | camel_case }}Repository.deleteById(id);{% endif %}
+
+        return Delete{{ entity_key | pascal_case }}Response.getDefaultInstance();
     }
 
 {%- endmacro %}
