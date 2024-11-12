@@ -1,12 +1,13 @@
 package {{ root_package }}.server.grpc;
 
+import {{ group_id }}.platform.errorhandling.exceptions.grpc.GeneralGrpcExceptionHandler;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import {{ root_package }}.core.{{ ProjectPrefix }}{{ ProjectSuffix }}Core;
 import {{ root_package }}.grpc.v1.*;
 import {{ root_package }}.grpc.v1.{{ ProjectPrefix }}{{ ProjectSuffix }}Grpc.{{ ProjectPrefix }}{{ ProjectSuffix }}ImplBase;
 
-@GRpcService
+@GRpcService(interceptors = {GeneralGrpcExceptionHandler.class})
 public class {{ ProjectPrefix }}{{ ProjectSuffix }}GrpcImpl extends {{ ProjectPrefix }}{{ ProjectSuffix }}ImplBase {
 
     private final {{ ProjectPrefix }}{{ ProjectSuffix }}Core service;
