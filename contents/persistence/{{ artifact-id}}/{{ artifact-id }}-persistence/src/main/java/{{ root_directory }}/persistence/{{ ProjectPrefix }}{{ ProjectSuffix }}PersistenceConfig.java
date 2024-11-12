@@ -51,7 +51,6 @@ public class {{ ProjectPrefix }}{{ ProjectSuffix }}PersistenceConfig {
     }
 
     @Bean(name = "{{projectPrefix}}TM")
-    @Qualifier("{{projectPrefix}}")
     public JpaTransactionManager {{projectPrefix}}TM(
     @Qualifier("{{projectPrefix}}DS") final DataSource dataSource,
     @Qualifier("{{projectPrefix}}EMF") final EntityManagerFactory emf) {
@@ -79,7 +78,6 @@ public class {{ ProjectPrefix }}{{ ProjectSuffix }}PersistenceConfig {
     }
 
     @Bean
-    @Qualifier("{{projectPrefix}}")
     public JdbcTemplate {{projectPrefix}}JdbcTemplate(@Qualifier("{{projectPrefix}}DS") final DataSource dataSource) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(dataSource);
