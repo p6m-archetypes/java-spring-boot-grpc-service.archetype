@@ -30,7 +30,7 @@ class {{ ProjectPrefix }}{{ ProjectSuffix }}GrpcTest extends {{ ProjectPrefix }}
     }
 
     @Test
-    void testGet{{ EntityName | pluralize }}() {{'{'}}{% if persistence != 'None' %}
+    void test_get{{ EntityName | pluralize }}() {{'{'}}{% if persistence != 'None' %}
         long existingRecords = server.getContext().getBean({{ EntityName }}Repository.class).count();
 
         int pageSize = 10;
@@ -59,6 +59,33 @@ class {{ ProjectPrefix }}{{ ProjectSuffix }}GrpcTest extends {{ ProjectPrefix }}
         assertThat(lastPageResponse.getHasPrevious()).isTrue();{% else %}
         Get{{ EntityName | pluralize }}Response response = client.get{{ EntityName | pluralize }}(Get{{ EntityName | pluralize }}Request.getDefaultInstance());
         assertThat(response).isNotNull();{% endif %}
+    }
+
+    @Test
+    void test_update{{ EntityName }}() {
+        Create{{ EntityName }}Response createResponse = client.create{{ EntityName }}({{ EntityName }}Dto.newBuilder()
+                                                                           .setName("{{ EntityName }}")
+                                                                           .build());
+
+        {{ EntityName }}Dto expected = {{ EntityName }}Dto.newBuilder()
+                                    .setId(createResponse.get{{ EntityName }}()
+                                                         .getId())
+                                    .setName("{{ EntityName }}")
+                                    .build();
+        Update{{ EntityName }}Response response = client.update{{ EntityName }}(expected);
+
+        assertThat(response.get{{ EntityName }}()).isEqualTo(expected);
+    }
+
+    @Test
+    void test_delete{{ EntityName }}() {
+        Create{{ EntityName }}Response createResponse = client.create{{ EntityName }}({{ EntityName }}Dto.newBuilder().setName("{{ EntityName }}").build());
+
+        Delete{{ EntityName }}Response response = client.delete{{ EntityName }}(
+            Delete{{ EntityName }}Request.newBuilder().setId(createResponse.get{{ EntityName }}().getId().getValue()).build()
+        );
+
+        assertThat(response.getMessage()).isEqualTo("Success");
     }
 {% endfor %}
 }
