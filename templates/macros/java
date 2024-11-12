@@ -105,7 +105,7 @@ final {{ entity_key | pascal_case }}Repository {{ entity_key | camel_case }}Repo
         UUID id = UUID.fromString(request.getId());
         {{ entity_key | camel_case }}Repository.deleteById(id);{% endif %}
 
-        return Delete{{ entity_key | pascal_case }}Response.newBuilder().setMessage("Success").build();;
+        return Delete{{ entity_key | pascal_case }}Response.newBuilder().setMessage("Success").build();
     }
 
 {%- endmacro %}
