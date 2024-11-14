@@ -15,6 +15,10 @@
     <properties>
         <start-class>{{ root_package }}.server.{{ ProjectPrefix }}{{ ProjectSuffix }}Server</start-class>
         <classifier-name>exec</classifier-name>
+        <sonar.coverage.exclusions>
+            **/{{ ProjectPrefix }}{{ ProjectSuffix }}Server.java,
+            **/RootController.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
