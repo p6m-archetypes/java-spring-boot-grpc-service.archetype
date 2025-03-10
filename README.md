@@ -16,14 +16,16 @@ project's root.
 
 When rendering the archetype, you'll be prompted for the following values:
 
-| Property          | Description                                                                                                         | Example               |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| `project`         | General name that represents the service domain that is used to set the entity, service, and RPC stub names.        | Shopping Cart         |
-| `suffix`          | Used in conjunction with `project` to set package names.                                                            | Service               |
-| `group-prefix`    | Used in conjunction with `project` to set package names.                                                            | {{ group-id }}        |
-| `team-name`       | Identifies the team that owns the generated project. Used to label published artifacts and in the generated README. | Growth                |
-| `service-port`    | Sets the port used for gRPC traffic                                                                                 | {{ service-port }}    |
-| `management-port` | Sets the port used to monitor the application over HTTP                                                             | {{ management-port }} |
+| Property          | Answer File field | Description                                                                                                         | Example               | Optional |
+| ----------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------- | -------- |
+| `project`         | project-id       | General name that represents the service domain that is used to set the entity, service, and RPC stub names.        | Shopping Cart         | No       |
+| `suffix`          | suffix           | Used in conjunction with `project` to set package names.                                                            | Service               | No       |
+| `group-prefix`    | group-id         | Used in conjunction with `project` to set package names.                                                            | {{ group-id }}        | No       |
+| `team-name`       | team-name        | Identifies the team that owns the generated project. Used to label published artifacts and in the generated README. | Growth                | No       |
+| `service-port`    | service-port     | Sets the port used for gRPC traffic                                                                                 | {{ service-port }}    | No       |
+| `management-port` | management-port  | Sets the port used to monitor the application over HTTP                                                             | {{ management-port }} | No       |
+| `persistence`     | persistence      | Type of persistence to use, e.g., CockroachDB or None.                                                             | CockroachDB           | Yes      |
+| `platform-version`| platform-version | Version of the parent project.                                                                                      | 1.0.0-SNAPSHOT        | Yes      |
 
 For a list of all derived properties and examples of the property relationships, see [archetype.yml](./archetype.yml).
 
