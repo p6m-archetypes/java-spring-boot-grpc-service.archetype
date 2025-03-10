@@ -18,7 +18,7 @@ When rendering the archetype, you'll be prompted for the following values:
 
 | Property          | Answer File field | Description                                                                                                         | Example               | Optional |
 | ----------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------- | -------- |
-| `project`         | project-id       | General name that represents the service domain that is used to set the entity, service, and RPC stub names.        | Shopping Cart         | No       |
+| `project`         | project-prefix   | General name that represents the service domain that is used to set the entity, service, and RPC stub names.        | Shopping Cart         | No       |
 | `suffix`          | suffix           | Used in conjunction with `project` to set package names.                                                            | Service               | No       |
 | `group-prefix`    | group-id         | Used in conjunction with `project` to set package names.                                                            | {{ group-id }}        | No       |
 | `team-name`       | team-name        | Identifies the team that owns the generated project. Used to label published artifacts and in the generated README. | Growth                | No       |
