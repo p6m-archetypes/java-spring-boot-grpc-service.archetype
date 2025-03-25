@@ -25,7 +25,7 @@ When rendering the archetype, you'll be prompted for the following values:
 | `service-port`    | service-port     | Sets the port used for gRPC traffic                                                                                 | {{ service-port }}    | No       |
 | `management-port` | management-port  | Sets the port used to monitor the application over HTTP                                                             | {{ management-port }} | No       |
 | `persistence`     | persistence      | Type of persistence to use, e.g., CockroachDB or None.                                                             | CockroachDB           | Yes      |
-| `platform-version`| platform-version | Version of the parent project.                                                                                      | 1.0.0-SNAPSHOT        | Yes      |
+
 
 For a list of all derived properties and examples of the property relationships, see [archetype.yml](./archetype.yml).
 

@@ -23,7 +23,7 @@ import org.testcontainers.containers.CockroachContainer;{% endif %}
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Optional;
 import java.util.Properties;

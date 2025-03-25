@@ -1,11 +1,11 @@
 package {{root_package}}.persistence.entities;
 
-import {{ group_id }}.platform.persistence.jpa.AbstractEntity;
+import {{root_package}}.persistence.jpa.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity

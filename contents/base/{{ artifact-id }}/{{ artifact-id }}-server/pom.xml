@@ -49,10 +49,6 @@
             <artifactId>localstack</artifactId>
         </dependency>
         <dependency>
-            <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-solution-name }}-platform-logging</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient_pushgateway</artifactId>
         </dependency>
@@ -63,14 +59,55 @@
         <dependency>
             <groupId>io.github.lognet</groupId>
             <artifactId>grpc-spring-boot-starter</artifactId>
-        </dependency>{% if feature-sqs or feature-sns %}
+            <exclusions>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-services</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-inprocess</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-protobuf-lite</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
-            <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-solution-name }}-platform-aws-messaging</artifactId>
-        </dependency>{% endif %}
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-services</artifactId>
+            <version>${io.grpc.version}</version>
+        </dependency>
         <dependency>
-            <groupId>{{ group-id }}</groupId>
-            <artifactId>{{ org-solution-name }}-platform-tracing</artifactId>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-inprocess</artifactId>
+            <version>${io.grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
     </dependencies>
 
@@ -81,7 +118,7 @@
                 <artifactId>jib-maven-plugin</artifactId>
                 <configuration>
                     <to>
-                        <image>${ARTIFACTORY_HOSTNAME}/{{ org-solution-name }}-docker-local/applications/${project.artifactId}:${project.version}</image>
+                        <image>{{ artifactory-host }}/{{ org-solution-name }}-docker-local/applications/${project.artifactId}:${project.version}</image>
                     </to>
                 </configuration>
             </plugin>

@@ -3,23 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>{{ group-id }}</groupId>
-        <artifactId>{{ org-solution-name }}-platform</artifactId>
-        <version>{{ platform-version }}</version>
-    </parent>
-
+    <groupId>{{ group-id }}</groupId>
     <artifactId>{{ artifact-id }}</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>{{ project-title }} :: Parent</name>
-
-    <scm>
-        <!--suppress MavenModelInspection -->
-        <developerConnection>
-            scm:git:https://${env.BUILD_USER_NAME}:${env.BUILD_USER_KEY}@gitlab.com/${env.CI_PROJECT_NAMESPACE}/${env.CI_PROJECT_NAME}
-        </developerConnection>
-    </scm>
 
     <modules>
         <module>{{ artifact-id }}-api</module>
@@ -32,21 +20,333 @@
         <module>{{ artifact-id }}-grpc</module>
     </modules>
 
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>{{ org-solution-name }}-libs-release</name>
+            <url>https://{{ artifactory-host }}/artifactory/{{ org-solution-name }}-libs-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>{{ org-solution-name }}-libs-snapshot</name>
+            <url>https://{{ artifactory-host }}/artifactory/{{ org-solution-name }}-libs-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
-        <{{ group-id }}.{{ org-solution-name }}-platform>{{ platform-version }}</{{ group-id }}.{{ org-solution-name }}-platform>
+        <java.version>17</java.version>
+
+        <org.springframework.boot.version>3.4.3</org.springframework.boot.version>
+        <com.fasterxml.jackson.version>2.18.2</com.fasterxml.jackson.version>
+        <com.github.os72.protoc-jar-maven-plugin.version>3.11.4</com.github.os72.protoc-jar-maven-plugin.version>
+        <com.google.api.grpc.proto-google-common-protos.version>2.54.1</com.google.api.grpc.proto-google-common-protos.version>
+        <com.google.protobuf.protoc.version>4.30.1</com.google.protobuf.protoc.version>
+        <io.github.lognet.grpc-spring-boot-starter.version>5.1.5</io.github.lognet.grpc-spring-boot-starter.version>
+        <io.grpc.version>1.71.0</io.grpc.version>
+        <net.logstash.logback.version>6.6</net.logstash.logback.version>
+        <org.sonarsource.scanner.maven.version>5.0.0.4389</org.sonarsource.scanner.maven.version>
+        <org.testcontainers.version>1.20.6</org.testcontainers.version>
+        <org.hibernate.version>6.6.8.Final</org.hibernate.version>
+        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+        <jakarta.annotations.version>3.0.0</jakarta.annotations.version>
+        <commons.io.version>2.18.0</commons.io.version>
+        <org.jacoco.version>0.8.12</org.jacoco.version>
+
+        <!-- Build Settings -->
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>{{ group-id }}</sonar.organization>
+        <sonar.aggregateReportDirectory>../target/site/jacoco-aggregate</sonar.aggregateReportDirectory>
+        <sonar.aggregateReportFile>${sonar.aggregateReportDirectory}/jacoco.xml</sonar.aggregateReportFile>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,${sonar.aggregateReportFile}</sonar.coverage.jacoco.xmlReportPaths>
+
+        <!-- Plugins -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>3.1.0</maven-deploy-plugin.version>
+        <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
+        <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
+        <maven-jib-plugin.version>3.4.1</maven-jib-plugin.version>
+        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>{{ group-id }}</groupId>
-                <artifactId>{{ org-solution-name }}-platform-bom</artifactId>
-                <version>${{'{'}}{{ group-id }}.{{ org-solution-name }}-platform{{'}'}}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${org.springframework.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Common Third-Party Dependency Management defined in {{ org-solution-name }}-dependencies. Import Service BOMs here.-->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.api.grpc</groupId>
+                <artifactId>proto-google-common-protos</artifactId>
+                <version>${com.google.api.grpc.proto-google-common-protos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${com.google.protobuf.protoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-javalite</artifactId>
+                <version>${com.google.protobuf.protoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-api</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf-lite</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-testing</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${io.grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>protoc-gen-grpc-java</artifactId>
+                <version>${io.grpc.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>io.github.lognet</groupId>
+                <artifactId>grpc-spring-boot-starter</artifactId>
+                <version>${io.github.lognet.grpc-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${net.logstash.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${org.testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${org.hibernate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>${jakarta.annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${maven-compiler-plugin.version}</version>
+                        <configuration>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
+                        </configuration>
+                    </plugin>
+                <plugin>
+                    <groupId>com.github.os72</groupId>
+                    <artifactId>protoc-jar-maven-plugin</artifactId>
+                    <version>${com.github.os72.protoc-jar-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <addProtoSources>inputs</addProtoSources>
+                                <protocArtifact>com.google.protobuf:protoc:${com.google.protobuf.protoc.version}
+                                </protocArtifact>
+                                <includeMavenTypes>transitive</includeMavenTypes>
+                                <outputTargets>
+                                    <outputTarget>
+                                        <type>java</type>
+                                    </outputTarget>
+                                    <outputTarget>
+                                        <type>grpc-java</type>
+                                        <pluginArtifact>
+                                            io.grpc:protoc-gen-grpc-java:${io.grpc.version}
+                                        </pluginArtifact>
+                                    </outputTarget>
+                                </outputTargets>
+                                <optimizeCodegen>false</optimizeCodegen>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${org.jacoco.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${org.sonarsource.scanner.maven.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>${maven-jib-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven-antrun-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${maven-exec-plugin.version}</version>
+                    <configuration>
+                        <!--suppress MavenModelInspection -->
+                        <mainClass>${start-class}</mainClass>
+                        <classpathScope>runtime</classpathScope>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <!--suppress MavenModelInspection -->
+                                <mainClass>${start-class}</mainClass>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

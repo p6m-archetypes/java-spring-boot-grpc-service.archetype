@@ -27,9 +27,8 @@ context += prompt("Persistence:", "persistence", #{
   defaults_with: "CockroachDB",
 });
 
-
-context += prompt(render("{{ org-solution-name }}-parent Version:", context), "platform-version", #{
-    defaults_with: "1.0.0-SNAPSHOT",
+context += prompt("Artifactory Host:", "artifactory-host", #{
+  defaults_with: "p6m.jfrog.io",
 });
 
 context += set("service-port", 9010);

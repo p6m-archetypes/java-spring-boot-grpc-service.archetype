@@ -9,9 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.stereotype.Component;
-import {{ group_id }}.platform.tracing.TracingInitializer;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.util.*;
 
 @Component
@@ -20,7 +19,6 @@ public class {{ ProjectPrefix }}{{ ProjectSuffix }}Server {
     final Logger log = LoggerFactory.getLogger({{ ProjectPrefix }}{{ ProjectSuffix }}Server.class);
 
     static {
-        TracingInitializer.initialize();
         if (System.getProperty("logging.config") == null) {
             System.setProperty("logging.config", "classpath:{{ artifact-id}}-server-logback.xml");
         }
