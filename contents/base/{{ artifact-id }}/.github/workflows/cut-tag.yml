@@ -15,3 +15,4 @@ jobs:
       ARTIFACTORY_IDENTITY_TOKEN: ${{'{'}}{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
     with:
       ARTIFACTORY_HOSTNAME: ${{'{'}}{ vars.ARTIFACTORY_HOSTNAME }}
+      JAVA_VERSION: "21"
