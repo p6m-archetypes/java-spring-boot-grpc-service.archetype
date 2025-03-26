@@ -8,8 +8,7 @@ Generated from the [Java Spring Boot gRPC Service Archetype](https://github.com/
 
 ## Prereqs
 Running this service requires JDK 21+ and Maven to be configured with an Artifactory encrypted key.
-Be sure to have [annotation processors](https://immutables.github.io/apt.html) enabled in your IDE. For development, be
-sure to have Docker installed and running locally.
+For development, be sure to have Docker installed and running locally.
 
 ## Overview
 
