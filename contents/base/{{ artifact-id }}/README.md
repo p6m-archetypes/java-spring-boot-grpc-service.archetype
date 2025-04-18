@@ -2,7 +2,7 @@
 
 **// TODO:** Add description of your project's business function.
 
-Generated from the [Java Spring Boot gRPC Service Archetype](https://github.com/p6m-dev/java-spring-boot-grpc-service-archetype). 
+Generated from the [Java Spring Boot gRPC Service Archetype](https://github.com/p6m-archetypes/java-spring-boot-grpc-service-archetype). 
 
 [[_TOC_]]
 
