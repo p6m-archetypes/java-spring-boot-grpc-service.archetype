@@ -1,18 +1,15 @@
 ---
 description: "Spring Boot, Namespaced, Modular Microservice"
-authors:
-  [
-    "Jimmie Fulton"
-  ]
+authors: ["Jimmie Fulton"]
 languages: ["Java"]
 frameworks: ["Spring", "Spring Boot", "JPA", "gRPC"]
 tags: ["Modular", "Service", "Microservice", "gRPC"]
 
 requires:
-  archetect: 2.0.0-ALPHA.15
+  archetect: 2.0.0
 
 components:
-  org-prompts: git@github.com:p6m-archetypes/org-prompts.archetype.git
-  java-project-attributes: git@github.com:p6m-archetypes/java-project-attributes.archetype.git
-  manifests: git@github.com:p6m-archetypes/platform-application-manifests.archetype.git
+  org-prompts: https://github.com/p6m-archetypes/org-prompts.archetype.git
+  java-project-attributes: https://github.com/p6m-archetypes/java-project-attributes.archetype.git
+  manifests: https://github.com/p6m-archetypes/platform-application-manifests.archetype.git
   gitignore: https://github.com/archetect/dot-gitignore.archetype.git
