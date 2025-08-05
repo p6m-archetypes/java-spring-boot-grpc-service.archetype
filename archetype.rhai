@@ -66,6 +66,14 @@ if context["persistence"] == "CockroachDB" {
 render(Archetype("manifests"), context["artifact-id"], context);
 render(Archetype("gitignore"), context["artifact-id"], #{ "ignore": ["java"]});
 
+if switch_enabled("zip") {
+  zip(context["artifact-id"], render("{{ artifact-id }}.zip", context));
+}
+
+if switch_enabled("tarball") {
+  tar_gz(context["artifact-id"], render("{{ artifact-id }}.tar.gz", context));
+}
+
 fn default_model(context) {
     let yaml = `
 ---
