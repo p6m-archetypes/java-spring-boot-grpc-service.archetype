@@ -74,6 +74,18 @@ if switch_enabled("tarball") {
   tar_gz(context["artifact-id"], render("{{ artifact-id }}.tar.gz", context));
 }
 
+if switch_enabled("git-init") || switch_enabled("git-publish") {
+  git_init(context["artifact-id"], "main");
+  git_add_all(context["artifact-id"]);
+  git_commit(context["artifact-id"], "initial commit");
+  git_remote_add(context["artifact-id"], "origin", render("https://github.com/{{ org-solution-name }}/{{ artifact-id }}.git", context));
+}
+
+if switch_enabled("git-publish") {
+  gh_repo_create(render("{{ org-solution-name }}/{{ artifact-id }}", context), Private);
+  git_push(context["artifact-id"], "origin", "main");
+}
+
 fn default_model(context) {
     let yaml = `
 ---
